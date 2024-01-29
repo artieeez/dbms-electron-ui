@@ -1,0 +1,15 @@
+{
+  "name": "dbms-electron-ui",
+  "version": "1.0.0",
+  "main": "main.js",
+  "devDependencies": {
+    "electron": "^28.2.0"
+  },
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "@electron/remote": "^2.1.2",
+    "bindings": "^1.5.0"
+  }
+}

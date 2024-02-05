@@ -68,8 +68,6 @@ export const DashboardLayout = ({ children }: any) => {
 
             const active = location.pathname === item.route;
 
-            console.log(location.pathname, item.route, active)
-
             return (
               <MenuItem
                 key={index}

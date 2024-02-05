@@ -1,4 +1,4 @@
-const dbms = require("bindings")("dbms");
+const dbms = window.dbms;
 
 console.log(dbms.linearSearch)
 

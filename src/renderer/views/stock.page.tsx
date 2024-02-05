@@ -1,4 +1,5 @@
 import { Container, Typography } from "@mui/material"
+import { DataGrid } from "@mui/x-data-grid"
 
 export const StockPage = () => {
 

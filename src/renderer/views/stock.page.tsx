@@ -5,13 +5,15 @@ import { Stock } from "../infra/dbms.model";
 
 const dbms = window.dbms
 
+console.log("dbms", dbms)
+
 export const StockPage = () => {
 
   const [search, setSearch] = useState('');
   const [rows, setRows] = useState<Stock[]>([]);
 
   useEffect(() => {
-    const res = dbms?.linearSearch?.getStockList(search, 1, 10, "name_asc")
+    const res = dbms?.indexController?.getStockList(search, 10, 0, "name_asc")
 
     if (res && typeof res === 'object' && res?.length) {
       setRows(res)
@@ -26,7 +28,7 @@ export const StockPage = () => {
   const [minDate, setMinDate] = useState('')
   const [maxDate, setMaxDate] = useState('')
   const addStock = () => {
-    dbms?.linearSearch?.addStock(stockId, companyId, minDate, maxDate)
+    dbms?.indexController?.addStock(stockId, companyId, minDate, maxDate)
   }
 
   return (
@@ -80,6 +82,9 @@ export const StockPage = () => {
           { field: 'maxDate', headerName: 'Max Date', width: 200 },
         ]}
         sx={{ height: 500, width: '100%' }}
+        // pagesize
+
+        pageSizeOptions={[5, 10, 20, 50, 100]}
       />
     </Container>
   )

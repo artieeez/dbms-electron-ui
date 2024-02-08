@@ -5,19 +5,23 @@ import { create } from "zustand"
 interface Store {
   cancel: boolean;
   pageSize: number;
-  currPos: number;
+  stockCount: number;
+  stockPriceCount: number;
+  loading: boolean;
 }
 
 const useStore = create<Store>((set) => ({
   cancel: false,
   pageSize: 10,
-  currPos: -1,
+  stockCount: 0,
+  stockPriceCount: -1,
+  loading: false,
 }))
 
 const iterator = async () => {
   return new Promise<void>(resolve => {
-    const currPos = window.dbms?.indexController?.loadDb(useStore.getState().pageSize)
-    useStore.setState({ currPos })
+    const [stockPriceCount, stockCount] = window.dbms?.indexController?.loadDb(useStore.getState().pageSize)
+    useStore.setState({ stockCount, stockPriceCount })
     setTimeout(() => {
       resolve()
     }, 200)
@@ -28,24 +32,27 @@ const useLoadDbMutation = () => {
   return useMutation({
     mutationFn: () => {
       return new Promise(async resolve => {
-        while (!useStore.getState().cancel && useStore.getState().currPos !== 0) {
+        while (!useStore.getState().cancel && useStore.getState().stockPriceCount !== 0) {
           await iterator()
         }
-        resolve(useStore.getState().currPos)
+        resolve(useStore.getState().stockPriceCount)
       })
     },
     onMutate: () => {
+      useStore.setState({ loading: true })
       toast.success("Database loading started")
     },
     onError: (error) => {
-      toast.error(`Database loading failed at position ${useStore.getState().currPos} with error: ${error}`)
+      useStore.setState({ loading: false })
+      toast.error(`Database loading failed at position ${useStore.getState().stockPriceCount} with error: ${error}`)
     },
     onSuccess: () => {
+      useStore.setState({ loading: false })
       if (useStore.getState().cancel) {
-        toast.error(`Database loading cancelled at position ${useStore.getState().currPos}`)
+        toast.error(`Database loading cancelled at position ${useStore.getState().stockPriceCount}`)
         useStore.setState({ cancel: false })
       } else {
-        toast.success(`Database loading completed at position ${useStore.getState().currPos}`)
+        toast.success(`Database loading completed at position ${useStore.getState().stockPriceCount}`)
       }
     },
   })

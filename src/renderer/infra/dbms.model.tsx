@@ -19,7 +19,7 @@ export interface IIndexController {
   getStock: (stockId: string) => Stock;
   deleteStock: (stockId: string) => void;
   getStockList: (search: string, pageNumber: number, pageSize: number, orderBy: string) => Stock[];
-  loadDb: (pageSize: number) => number;
+  loadDb: (pageSize: number) => [number, number];
 }
 
 export interface DBMS {

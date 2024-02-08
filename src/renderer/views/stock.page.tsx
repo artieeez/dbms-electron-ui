@@ -15,7 +15,7 @@ export const StockPage = () => {
   const page = StockListService.useStore(e => e.page)
   const pageSize = StockListService.useStore(e => e.pageSize)
   const query = StockListService.useStockQuery()
-  const rowCount = StockService.useStore(e => e.currPos)
+  const stockCount = StockService.useStore(e => e.stockCount)
 
   // stock add form
   const [openAdd, setOpenAdd] = useState(false)
@@ -95,7 +95,7 @@ export const StockPage = () => {
           page: page,
           pageSize: pageSize,
         }}
-        rowCount={rowCount}
+        rowCount={stockCount}
         onPaginationModelChange={(params: any) => {
           StockListService.useStore.setState({ page: params.page, pageSize: params.pageSize })
         }}

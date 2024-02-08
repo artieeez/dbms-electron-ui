@@ -5,9 +5,10 @@ import { CancelRounded, CloudDownloadRounded } from "@mui/icons-material"
 export const Overview = () => {
 
   const loaderMutation = StockService.useLoadDbMutation()
-  const _currPos = StockService.useStore(e => e.currPos)
-  const currPos = _currPos < 0 ? 0 : _currPos
+  const stockPriceCount = StockService.useStore(e => e.stockPriceCount)
+  const currPos = stockPriceCount < 0 ? 0 : stockPriceCount
   const pageSize = StockService.useStore(e => e.pageSize)
+  const loading = StockService.useStore(e => e.loading)
 
   return (
     <Container>
@@ -19,7 +20,7 @@ export const Overview = () => {
         <CardHeader
           title="Records Overview"
           action={
-            loaderMutation.isPending
+            loading
               ? (
                 <Button
                   variant="contained"

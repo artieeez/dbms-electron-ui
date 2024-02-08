@@ -14,14 +14,25 @@ const useStore = create<Store>((set) => ({
   currPos: -1,
 }))
 
+const iterator = async () => {
+  return new Promise<void>(resolve => {
+    const currPos = window.dbms?.indexController?.loadDb(useStore.getState().pageSize)
+    useStore.setState({ currPos })
+    setTimeout(() => {
+      resolve()
+    }, 200)
+  })
+}
+
 const useLoadDbMutation = () => {
   return useMutation({
     mutationFn: () => {
-      while (!useStore.getState().cancel && useStore.getState().currPos !== 0 && useStore.getState().currPos < 99999) {
-        const currPos = window.dbms?.indexController?.loadDb(useStore.getState().pageSize)
-        useStore.setState({ currPos })
-      }
-      return new Promise(resolve => resolve(useStore.getState().currPos))
+      return new Promise(async resolve => {
+        while (!useStore.getState().cancel && useStore.getState().currPos !== 0) {
+          await iterator()
+        }
+        resolve(useStore.getState().currPos)
+      })
     },
     onMutate: () => {
       toast.success("Database loading started")

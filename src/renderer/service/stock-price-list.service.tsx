@@ -26,7 +26,9 @@ const useStockPriceQuery = () => {
   return useQuery({
     queryKey: ['stock-price', search, pageSize, page],
     queryFn: async () => {
+      console.log(window.dbms)
       const res = window.dbms?.indexController?.getStockPriceList(search, page, pageSize)
+      console.log(res)
       return res
     },
   })

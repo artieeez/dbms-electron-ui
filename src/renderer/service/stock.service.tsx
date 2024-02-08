@@ -20,7 +20,7 @@ const useStore = create<Store>((set) => ({
 
 const iterator = async () => {
   return new Promise<void>(resolve => {
-    const [stockPriceCount, stockCount] = window.dbms?.indexController?.loadDb(useStore.getState().pageSize)
+    const [stockCount, stockPriceCount] = window.dbms?.indexController?.loadDb(useStore.getState().pageSize)
     console.log("stockPriceCount", stockPriceCount)
     console.log("stockCount", stockCount)
     useStore.setState({ stockCount, stockPriceCount })

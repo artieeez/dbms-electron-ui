@@ -6,11 +6,15 @@ export interface Stock {
 }
 
 export interface StockPrice {
-  stockId: string;
   stockPriceId: string;
-  companyId: string;
-  minDate: string;
-  maxDate: string;
+  stockId: string;
+  date: string;
+  adj: number;
+  close: number;
+  high: number;
+  low: number;
+  open: number;
+  volume: number;
 }
 
 export interface stockPricePayload {
@@ -41,7 +45,7 @@ export interface IIndexController {
   getStock: (stockId: string) => Stock;
   deleteStock: (stockId: string) => void;
   getStockList: (search: string, pageNumber: number, pageSize: number, orderBy: string) => Stock[];
-  getStockPriceList: (stockId:string, pageSize: number, pageNumber: number) => StockPrice[];
+  getStockPriceList: (stockId:string, page: number, pageSize: number) => StockPrice[];
   loadDb: (pageSize: number) => [number, number];
 }
 

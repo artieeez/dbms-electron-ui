@@ -21,6 +21,11 @@ const useStore = create<Store>((set) => ({
 const iterator = async () => {
   return new Promise<void>(resolve => {
     const [stockPriceCount, stockCount] = window.dbms?.indexController?.loadDb(useStore.getState().pageSize)
+    if (stockPriceCount === stockCount) {
+      // console.log("\n")
+      // console.log("stockPriceCount", stockPriceCount)
+      // console.log("stockCount", stockCount)
+    }
     useStore.setState({ stockCount, stockPriceCount })
     setTimeout(() => {
       resolve()

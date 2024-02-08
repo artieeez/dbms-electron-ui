@@ -1,10 +1,11 @@
-import { Box, Button, Collapse, Container, IconButton, Stack, TextField, Typography } from "@mui/material"
+import { Box, Button, CardHeader, Collapse, Container, IconButton, Stack, TextField, Typography } from "@mui/material"
 import { DataGrid } from "@mui/x-data-grid"
 import { useEffect, useState } from "react";
 import { Stock } from "../infra/dbms.model";
 import { DeleteRounded, RemoveRounded } from "@mui/icons-material";
 import { StockListService } from "../service/stock-list.service";
 import { StockService } from "../service/stock.service";
+import { SearchRounded } from "@mui/icons-material";
 
 const dbms = window.dbms
 
@@ -30,63 +31,65 @@ export const StockPage = () => {
   console.log(dbms)
   return (
     <Container sx={{ py: 4 }}>
-      <Typography variant="h5">Stock Page</Typography>
-      {/* Add stock */}
-
-      <Button
-        variant="contained"
-        onClick={()=>setOpenAdd(!openAdd)}
-        sx={{mt: 2}}
-      >
-        Add Stock
-      </Button>
-      <Collapse in={openAdd} sx={{py: 2, width: 1}}>
-      <Box display="flex" flexDirection="row" gap={2}>
-        <TextField
-          label="Stock ID"
-          value={stockId}
-          onChange={(e) => setStockId(e.target.value)}
-          sx={{ mb: 2 }}
-          fullWidth
-        />
-        <TextField
-          label="Company ID"
-          value={companyId}
-          onChange={(e) => setCompanyId(e.target.value)}
-          sx={{ mb: 2 }}
-          fullWidth
-        />
-        <TextField
-          label="Min Date"
-          value={minDate}
-          onChange={(e) => setMinDate(e.target.value)}
-          sx={{ mb: 2 }}
-          fullWidth
-        />
-        <TextField
-          label="Max Date"
-          value={maxDate}
-          onChange={(e) => setMaxDate(e.target.value)}
-          sx={{ mb: 2 }}
-          fullWidth
-        />
-        
-      </Box>
-      <Box display="flex" justifyContent="flex-end" gap={2}>
-        <Button
-          variant="contained"
-          onClick={addStock}
+      <CardHeader
+        title="Stock Page"
+        subheader="Welcome to the Stock Page"
+        action={
+          <Button
+            variant="contained"
+            onClick={() => setOpenAdd(!openAdd)}
+            sx={{ mt: 2 }}
+          >
+            Add Stock
+          </Button>
+        }
+        // remove left padding
+        sx={{ pl: 0 }}
+      />
+      <Collapse in={openAdd} sx={{ py: 2 }}>
+        <Box display="flex" flexDirection="row" gap={2}>
+          <TextField
+            label="Stock ID"
+            value={stockId}
+            onChange={(e) => setStockId(e.target.value)}
+          />
+          <TextField
+            label="Company ID"
+            value={companyId}
+            onChange={(e) => setCompanyId(e.target.value)}
+          />
+          <TextField
+            label="Min Date"
+            value={minDate}
+            onChange={(e) => setMinDate(e.target.value)}
+          />
+          <TextField
+            label="Max Date"
+            value={maxDate}
+            onChange={(e) => setMaxDate(e.target.value)}
+          />
+          <Button
+            variant="contained"
+            onClick={addStock}
+            sx={{ flex: 1 }}
           >
             Confirm
-        </Button>
+          </Button>
         </Box>
       </Collapse>
       <TextField
-          label="Search"
-          value={search}
-          onChange={(e) => StockListService.useStore.setState({ search: e.target.value })}
-          sx={{ mb: 2 }}
-        />
+        fullWidth
+        value={search}
+        onChange={(e) => StockListService.useStore.setState({ search: e.target.value })}
+        sx={{ mb: 2 }}
+        InputProps={{
+          startAdornment: (
+            <Box sx={{ mr: 1 }}>
+              <SearchRounded />
+            </Box>
+          ),
+        }}
+      />
       <DataGrid
         rows={[{ stockId: '1', companyId: '1', minDate: '2021-01-01', maxDate: '2021-01-01' }]}
         getRowId={(row) => row.stockId}

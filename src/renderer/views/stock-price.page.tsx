@@ -51,21 +51,56 @@ export const StockPricePage = () => {
         <TextField
           label="Stock Price ID"
           value={stockId}
-          onChange={(e) => setStockPriceId(e.target.value)}
+          onChange={(e) => setStockId(e.target.value)}
           sx={{ mb: 2 }}
           fullWidth
         />
         <TextField
-          label="Min Date"
-          value={minDate}
-          onChange={(e) => setMinDate(e.target.value)}
+          label="Date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
           sx={{ mb: 2 }}
           fullWidth
         />
         <TextField
-          label="Max Date"
-          value={maxDate}
-          onChange={(e) => setMaxDate(e.target.value)}
+          label="Adj"
+          value={adj}
+          onChange={(e) => setAdj(Number(e.target.value))}
+          sx={{ mb: 2 }}
+          fullWidth
+        />
+        <TextField
+          label="Close"
+          value={close}
+          onChange={(e) => setClose(Number(e.target.value))}
+          sx={{ mb: 2 }}
+          fullWidth
+        />
+        <TextField
+          label="High"
+          value={high}
+          onChange={(e) => setHigh(Number(e.target.value))}
+          sx={{ mb: 2 }}
+          fullWidth
+        />
+        <TextField
+          label="Low"
+          value={low}
+          onChange={(e) => setLow(Number(e.target.value))}
+          sx={{ mb: 2 }}
+          fullWidth
+        />
+        <TextField
+          label="Open"
+          value={open}
+          onChange={(e) => setOpen(Number(e.target.value))}
+          sx={{ mb: 2 }}
+          fullWidth
+        />
+        <TextField
+          label="Volume"
+          value={volume}
+          onChange={(e) => setVolume(Number(e.target.value))}
           sx={{ mb: 2 }}
           fullWidth
         />
@@ -87,13 +122,18 @@ export const StockPricePage = () => {
           sx={{ mb: 2 }}
         />
       <DataGrid
-        rows={[{ stockId: '1', companyId: '1', minDate: '2021-01-01', maxDate: '2021-01-01' }]}
-        getRowId={(row) => row.stockId}
+        rows={[{stockId: "1", stockPriceId: "1", date: "2021-01-01", adj: 1, close: 1, high: 1, low: 1, open: 1, volume: 1}]}
+        getRowId={(row) => row.stockPriceId}
         columns={[
           { sortable: false, field: 'stockId', headerName: 'ID', width: 200 },
-          { sortable: false, field: 'companyId', headerName: 'Company ID', width: 200 },
-          { sortable: false, field: 'minDate', headerName: 'Min Date', width: 200 },
-          { sortable: false, field: 'maxDate', headerName: 'Max Date', width: 200 },
+          { sortable: false, field: 'stockPriceId', headerName: 'Company ID', width: 200 },
+          { sortable: false, field: 'date', headerName: 'Min Date', width: 200 },
+          { sortable: false, field: 'adj', headerName: 'Max Date', width: 200 },
+          { sortable: false, field: 'close', headerName: 'Max Date', width: 200 },
+          { sortable: false, field: 'high', headerName: 'Max Date', width: 200 },
+          { sortable: false, field: 'low', headerName: 'Max Date', width: 200 },
+          { sortable: false, field: 'open', headerName: 'Max Date', width: 200 },
+          { sortable: false, field: 'volume', headerName: 'Max Date', width: 200 },
           { sortable: false, field: 'actions', headerName: '', width: 10, renderCell: (params) => {
             return (
               <Stack direction="row" justifyContent="end" spacing={2}>

@@ -2,6 +2,8 @@ import { Button, Container, TextField, Typography } from "@mui/material"
 import { DataGrid } from "@mui/x-data-grid"
 import { useEffect, useState } from "react";
 import { Stock } from "../infra/dbms.model";
+import { StockListService } from "../service/stock-list.service";
+import { StockService } from "../service/stock.service";
 
 const dbms = window.dbms
 
@@ -9,18 +11,11 @@ console.log("dbms", dbms)
 
 export const StockPage = () => {
 
-  const [search, setSearch] = useState('');
-  const [rows, setRows] = useState<Stock[]>([]);
-
-  useEffect(() => {
-    const res = dbms?.indexController?.getStockList(search, 10, 0, "name_asc")
-
-    if (res && typeof res === 'object' && res?.length) {
-      setRows(res)
-    } else {
-      setRows([])
-    }
-  }, [search])
+  const search = StockListService.useStore(e => e.search)
+  const page = StockListService.useStore(e => e.page)
+  const pageSize = StockListService.useStore(e => e.pageSize)
+  const query = StockListService.useStockQuery()
+  const rowCount = StockService.useStore(e => e.currPos)
 
   // stock add form
   const [stockId, setStockId] = useState('')
@@ -69,21 +64,28 @@ export const StockPage = () => {
       <TextField
         label="Search"
         value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        onChange={(e) => StockListService.useStore.setState({ search: e.target.value })}
         sx={{ mb: 2 }}
       />
       <DataGrid
-        rows={rows}
+        rows={query?.data || []}
         getRowId={(row) => row.stockId}
         columns={[
-          { field: 'stockId', headerName: 'ID', width: 200 },
-          { field: 'companyId', headerName: 'Company ID', width: 200 },
-          { field: 'minDate', headerName: 'Min Date', width: 200 },
-          { field: 'maxDate', headerName: 'Max Date', width: 200 },
+          { sortable: false, field: 'stockId', headerName: 'ID', width: 200 },
+          { sortable: false, field: 'companyId', headerName: 'Company ID', width: 200 },
+          { sortable: false, field: 'minDate', headerName: 'Min Date', width: 200 },
+          { sortable: false, field: 'maxDate', headerName: 'Max Date', width: 200 },
         ]}
         sx={{ height: 500, width: '100%' }}
-        // pagesize
-
+        rowSelection={false}
+        paginationModel={{
+          page: page,
+          pageSize: pageSize,
+        }}
+        rowCount={rowCount}
+        onPaginationModelChange={(params: any) => {
+          StockListService.useStore.setState({ page: params.page, pageSize: params.pageSize })
+        }}
         pageSizeOptions={[5, 10, 20, 50, 100]}
       />
     </Container>

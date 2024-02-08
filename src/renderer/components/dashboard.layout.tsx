@@ -15,6 +15,11 @@ const items = [
     route: '/stock'
   },
   {
+    label: 'Stock Prices List',
+    icon: ShowChartRounded,
+    route: '/stock-price'
+  },
+  {
     label: 'Project Presentation',
     icon: SlideshowRounded,
     route: '/presentation'

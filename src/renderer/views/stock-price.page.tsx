@@ -1,7 +1,7 @@
 import { Box, Button, Collapse, Container, IconButton, Stack, TextField, Typography } from "@mui/material"
 import { DataGrid } from "@mui/x-data-grid"
 import { useEffect, useState } from "react";
-import { Stock } from "../infra/dbms.model";
+import { Stock, stockPricePayload } from "../infra/dbms.model";
 import { DeleteRounded, RemoveRounded } from "@mui/icons-material";
 import { StockListService } from "../service/stock-list.service";
 import { StockService } from "../service/stock.service";
@@ -10,27 +10,33 @@ const dbms = window.dbms
 
 console.log("dbms", dbms)
 
-export const StockPage = () => {
+export const StockPricePage = () => {
 
   const search = StockListService.useStore(e => e.search)
   const page = StockListService.useStore(e => e.page)
   const pageSize = StockListService.useStore(e => e.pageSize)
   const query = StockListService.useStockQuery()
-  const stockCount = StockService.useStore(e => e.stockCount)
+
 
   // stock add form
   const [openAdd, setOpenAdd] = useState(false)
   const [stockId, setStockId] = useState('')
-  const [companyId, setCompanyId] = useState('')
-  const [minDate, setMinDate] = useState('')
-  const [maxDate, setMaxDate] = useState('')
+  const [date, setDate] = useState('')
+  const [adj, setAdj] = useState(0)
+  const [close, setClose] = useState(0)
+  const [high, setHigh] = useState(0)
+  const [low, setLow] = useState(0)
+  const [open, setOpen] = useState(0)
+  const [volume, setVolume] = useState(0)
   const addStock = () => {
-    dbms?.indexController?.addStock(stockId, companyId, minDate, maxDate)
+    dbms?.indexController?.addStockPrice({stockId, stockPriceId: stockId+date, date, adj, close, high, low, open, volume})
   }
-  console.log(dbms)
+
+  console.log(dbms?.indexController)
+
   return (
     <Container sx={{ py: 4 }}>
-      <Typography variant="h5">Stock Page</Typography>
+      <Typography variant="h5">Stock Price Page</Typography>
       {/* Add stock */}
 
       <Button
@@ -43,16 +49,9 @@ export const StockPage = () => {
       <Collapse in={openAdd} sx={{py: 2, width: 1}}>
       <Box display="flex" flexDirection="row" gap={2}>
         <TextField
-          label="Stock ID"
+          label="Stock Price ID"
           value={stockId}
-          onChange={(e) => setStockId(e.target.value)}
-          sx={{ mb: 2 }}
-          fullWidth
-        />
-        <TextField
-          label="Company ID"
-          value={companyId}
-          onChange={(e) => setCompanyId(e.target.value)}
+          onChange={(e) => setStockPriceId(e.target.value)}
           sx={{ mb: 2 }}
           fullWidth
         />
@@ -117,7 +116,6 @@ export const StockPage = () => {
           page: page,
           pageSize: pageSize,
         }}
-        rowCount={stockCount}
         onPaginationModelChange={(params: any) => {
           StockListService.useStore.setState({ page: params.page, pageSize: params.pageSize })
         }}

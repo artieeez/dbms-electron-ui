@@ -1,4 +1,4 @@
-import { Button, Container, TextField, Typography } from "@mui/material"
+import { Box, Button, Collapse, Container, Stack, TextField, Typography } from "@mui/material"
 import { DataGrid } from "@mui/x-data-grid"
 import { useEffect, useState } from "react";
 import { Stock } from "../infra/dbms.model";
@@ -18,6 +18,7 @@ export const StockPage = () => {
   const rowCount = StockService.useStore(e => e.currPos)
 
   // stock add form
+  const [openAdd, setOpenAdd] = useState(false)
   const [stockId, setStockId] = useState('')
   const [companyId, setCompanyId] = useState('')
   const [minDate, setMinDate] = useState('')
@@ -30,37 +31,49 @@ export const StockPage = () => {
     <Container sx={{ py: 4 }}>
       <Typography variant="h5">Stock Page</Typography>
       {/* Add stock */}
-      <TextField
-        label="Stock ID"
-        value={stockId}
-        onChange={(e) => setStockId(e.target.value)}
-        sx={{ mb: 2 }}
-      />
-      <TextField
-        label="Company ID"
-        value={companyId}
-        onChange={(e) => setCompanyId(e.target.value)}
-        sx={{ mb: 2 }}
-      />
-      <TextField
-        label="Min Date"
-        value={minDate}
-        onChange={(e) => setMinDate(e.target.value)}
-        sx={{ mb: 2 }}
-      />
-      <TextField
-        label="Max Date"
-        value={maxDate}
-        onChange={(e) => setMaxDate(e.target.value)}
-        sx={{ mb: 2 }}
-      />
+
       <Button
         variant="contained"
-        onClick={addStock}
+        onClick={()=>setOpenAdd(!openAdd)}
+        sx={{mt: 2}}
       >
         Add Stock
       </Button>
-
+      <Collapse in={openAdd} sx={{py: 2}}>
+      <Box display="flex" flexDirection="row" gap={2}>
+        <TextField
+          label="Stock ID"
+          value={stockId}
+          onChange={(e) => setStockId(e.target.value)}
+          sx={{ mb: 2 }}
+        />
+        <TextField
+          label="Company ID"
+          value={companyId}
+          onChange={(e) => setCompanyId(e.target.value)}
+          sx={{ mb: 2 }}
+        />
+        <TextField
+          label="Min Date"
+          value={minDate}
+          onChange={(e) => setMinDate(e.target.value)}
+          sx={{ mb: 2 }}
+        />
+        <TextField
+          label="Max Date"
+          value={maxDate}
+          onChange={(e) => setMaxDate(e.target.value)}
+          sx={{ mb: 2 }}
+        />
+        
+      </Box>
+        <Button
+          variant="contained"
+          onClick={addStock}
+          >
+            Confirm
+        </Button>
+      </Collapse>
       <TextField
         label="Search"
         value={search}

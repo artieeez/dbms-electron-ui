@@ -9,8 +9,6 @@ import { SearchRounded } from "@mui/icons-material";
 
 const dbms = window.dbms
 
-console.log("dbms", dbms)
-
 export const StockPage = () => {
 
   const search = StockListService.useStore(e => e.search)
@@ -91,7 +89,7 @@ export const StockPage = () => {
         }}
       />
       <DataGrid
-        rows={[{ stockId: '1', companyId: '1', minDate: '2021-01-01', maxDate: '2021-01-01' }]}
+        rows={query?.data || []}
         getRowId={(row) => row.stockId}
         columns={[
           { sortable: false, field: 'stockId', headerName: 'ID', width: 200 },

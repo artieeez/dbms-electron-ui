@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { create } from "zustand";
 
 interface Store {
-  stockId: string;
+  search: string;
   page: number;
   pageSize: number;
   minDate: string;
@@ -10,7 +10,7 @@ interface Store {
 }
 
 const useStore = create<Store>((set) => ({
-  stockId: '',
+  search: '',
   page: 0,
   pageSize: 10,
   minDate: '',
@@ -19,14 +19,14 @@ const useStore = create<Store>((set) => ({
 
 const useStockPriceQuery = () => {
 
-  const stockId = useStore(e => e.stockId)
+  const search = useStore(e => e.search)
   const page = useStore(e => e.page)
   const pageSize = useStore(e => e.pageSize)
 
   return useQuery({
-    queryKey: ['stock-price', stockId, pageSize, page],
+    queryKey: ['stock-price', search, pageSize, page],
     queryFn: async () => {
-      const res = window.dbms?.indexController?.getStockPriceList(stockId, page, pageSize)
+      const res = window.dbms?.indexController?.getStockPriceList(search, page, pageSize)
       return res
     },
   })

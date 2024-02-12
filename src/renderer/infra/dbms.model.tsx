@@ -46,10 +46,22 @@ export interface IIndexController {
   deleteStock: (stockId: string) => void;
   getStockList: (search: string, pageNumber: number, pageSize: number, orderBy: string) => Stock[];
   getStockPriceList: (stockId:string, page: number, pageSize: number) => StockPrice[];
-  loadDb: (pageSize: number) => [number, number];
+}
+
+export interface DatabaseState {
+  stockCount: number;
+  stockPriceCount: number;
+  isFinished: boolean;
+}
+
+export interface IDatabaseState {
+  loadDb: (pageSize: number) => DatabaseState;
+  resetDatabase: () => void;
+  getDatabaseState: () => DatabaseState;
 }
 
 export interface DBMS {
   linearSearch: ILinearSearch;
   indexController: IIndexController;
+  stateController: IDatabaseState,
 }

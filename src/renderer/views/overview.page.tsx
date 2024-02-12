@@ -9,6 +9,7 @@ export const Overview = () => {
   const currPos = stockPriceCount < 0 ? 0 : stockPriceCount
   const pageSize = StockService.useStore(e => e.pageSize)
   const loading = StockService.useStore(e => e.loading)
+  // const isFinished = StockService.useStore(e => e.isFinished)
 
   return (
     <Container>
@@ -49,7 +50,9 @@ export const Overview = () => {
             value={pageSize}
             onChange={(_, value) => StockService.useStore.setState({ pageSize: value as number })}
             min={1}
-            max={50}
+            max={20}
+            valueLabelDisplay="auto"
+            marks
             />
           <Typography>Database Status</Typography>
           <Typography align="center">{currPos} / 894777</Typography>

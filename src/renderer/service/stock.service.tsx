@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { create } from "zustand"
 
@@ -8,6 +8,7 @@ interface Store {
   stockCount: number;
   stockPriceCount: number;
   loading: boolean;
+  isFinished?: boolean;
 }
 
 const useStore = create<Store>((set) => ({
@@ -16,17 +17,32 @@ const useStore = create<Store>((set) => ({
   stockCount: 0,
   stockPriceCount: -1,
   loading: false,
+  isFinished: false,
 }))
 
 const iterator = async () => {
   return new Promise<void>(resolve => {
-    const [stockCount, stockPriceCount] = window.dbms?.indexController?.loadDb(useStore.getState().pageSize)
-    console.log("stockPriceCount", stockPriceCount)
-    console.log("stockCount", stockCount)
-    useStore.setState({ stockCount, stockPriceCount })
+    const { stockCount, stockPriceCount, isFinished } = window.dbms?.stateController?.loadDb(useStore.getState().pageSize)
+    useStore.setState({ stockCount, stockPriceCount, isFinished })
     setTimeout(() => {
       resolve()
     }, 200)
+  })
+}
+
+const useDatabaseState = () => {
+  return useQuery({
+    queryKey: ["dbState"],
+    queryFn: () => {
+      return new Promise(resolve => {
+        const res = window.dbms?.stateController?.getDatabaseState();
+        useStore.setState({
+          stockCount: res.stockCount,
+          stockPriceCount: res.stockPriceCount,
+          isFinished: res.isFinished
+        })
+      })
+    },
   })
 }
 
@@ -34,7 +50,7 @@ const useLoadDbMutation = () => {
   return useMutation({
     mutationFn: () => {
       return new Promise(async resolve => {
-        while (!useStore.getState().cancel && useStore.getState().stockPriceCount !== 0) {
+        while (!useStore.getState().cancel && useStore.getState().stockPriceCount !== 0 && !useStore.getState().isFinished) {
           await iterator()
         }
         resolve(useStore.getState().stockPriceCount)
@@ -62,5 +78,6 @@ const useLoadDbMutation = () => {
 
 export const StockService = {
   useStore,
+  useDatabaseState,
   useLoadDbMutation,
 }

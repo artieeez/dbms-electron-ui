@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Stock } from "../infra/dbms.model";
 import { DeleteRounded, RemoveRounded } from "@mui/icons-material";
 import { StockListService } from "../service/stock-list.service";
-import { StockService } from "../service/stock.service";
+import { DatabaseStateService } from "../service/db-state.service";
 import { SearchRounded } from "@mui/icons-material";
 
 const dbms = window.dbms
@@ -15,7 +15,7 @@ export const StockPage = () => {
   const page = StockListService.useStore(e => e.page)
   const pageSize = StockListService.useStore(e => e.pageSize)
   const query = StockListService.useStockQuery()
-  const stockCount = StockService.useStore(e => e.stockCount)
+  const stockCount = DatabaseStateService.useStore(e => e.stockCount)
 
   // stock add form
   const [openAdd, setOpenAdd] = useState(false)

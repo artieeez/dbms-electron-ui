@@ -76,8 +76,20 @@ const useLoadDbMutation = () => {
   })
 }
 
-export const StockService = {
+const useResetDbMutation = () => {
+  return useMutation({
+    mutationFn: () => {
+      return new Promise<void>(resolve => {
+        window.dbms?.stateController?.resetDatabase()
+        resolve()
+      })
+    }
+  })
+}
+
+export const DatabaseStateService = {
   useStore,
   useDatabaseState,
   useLoadDbMutation,
+  useResetDbMutation,
 }

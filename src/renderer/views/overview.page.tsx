@@ -1,15 +1,18 @@
 import { Button, Card, CardContent, CardHeader, Container, LinearProgress, Paper, Slider, Typography } from "@mui/material"
-import { StockService } from "../service/stock.service"
+import { DatabaseStateService } from "../service/db-state.service"
 import { CancelRounded, CloudDownloadRounded } from "@mui/icons-material"
 
 export const Overview = () => {
 
-  const loaderMutation = StockService.useLoadDbMutation()
-  const stockPriceCount = StockService.useStore(e => e.stockPriceCount)
+  const loaderMutation = DatabaseStateService.useLoadDbMutation()
+  const stockPriceCount = DatabaseStateService.useStore(e => e.stockPriceCount)
   const currPos = stockPriceCount < 0 ? 0 : stockPriceCount
-  const pageSize = StockService.useStore(e => e.pageSize)
-  const loading = StockService.useStore(e => e.loading)
-  // const isFinished = StockService.useStore(e => e.isFinished)
+  const pageSize = DatabaseStateService.useStore(e => e.pageSize)
+  const loading = DatabaseStateService.useStore(e => e.loading)
+  const databaseMutation = DatabaseStateService.useResetDbMutation()
+  // const isFinished = DatabaseStateService.useStore(e => e.isFinished)
+
+  DatabaseStateService.useDatabaseState();
 
   return (
     <Container>
@@ -26,7 +29,7 @@ export const Overview = () => {
                 <Button
                   variant="contained"
                   color="secondary"
-                  onClick={() => StockService.useStore.setState({ cancel: true })}
+                  onClick={() => DatabaseStateService.useStore.setState({ cancel: true })}
                   startIcon={<CancelRounded />}
                 >
                   Cancel
@@ -48,15 +51,29 @@ export const Overview = () => {
           <Typography>Block Size</Typography>
           <Slider
             value={pageSize}
-            onChange={(_, value) => StockService.useStore.setState({ pageSize: value as number })}
+            onChange={(_, value) => DatabaseStateService.useStore.setState({ pageSize: value as number })}
             min={1}
             max={20}
             valueLabelDisplay="auto"
             marks
-            />
+          />
           <Typography>Database Status</Typography>
           <Typography align="center">{currPos} / 894777</Typography>
           <LinearProgress variant="determinate" value={currPos / 894777} />
+        </CardContent>
+      </Card>
+      <Card variant="outlined">
+        <CardHeader
+          title="Database Actions"
+        />
+        <CardContent>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => databaseMutation.mutateAsync()}
+          >
+            Reset Database
+          </Button>
         </CardContent>
       </Card>
     </Container >

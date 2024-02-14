@@ -1,8 +1,7 @@
 import { Box, Button, CardHeader, Collapse, Container, FormControlLabel, IconButton, Stack, Switch, TextField, Typography } from "@mui/material"
 import { DataGrid } from "@mui/x-data-grid"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DeleteRounded, SearchRounded } from "@mui/icons-material";
-import { StockListService } from "../service/stock-list.service";
 import { StockPriceListService } from "../service/stock-price-list.service";
 import { DatabaseStateService } from "../service/db-state.service";
 
@@ -16,6 +15,10 @@ export const StockPricePage = () => {
   const query = StockPriceListService.useStockPriceQuery()
   const indexSearch = StockPriceListService.useStore(e => e.indexSearch)
   const stockPriceCount = DatabaseStateService.useStore(e => e.stockPriceCount)
+
+  useEffect(() => {
+    console.log("query", query.data)
+  }, [query.data])
 
   // stock add form
   const [openAdd, setOpenAdd] = useState(false)
@@ -146,13 +149,13 @@ export const StockPricePage = () => {
         columns={[
           { sortable: false, field: 'stockId', headerName: 'ID', width: 200 },
           { sortable: false, field: 'stockPriceId', headerName: 'Company ID', width: 200 },
-          { sortable: false, field: 'date', headerName: 'Min Date', width: 200 },
-          { sortable: false, field: 'adj', headerName: 'Max Date', width: 200 },
-          { sortable: false, field: 'close', headerName: 'Max Date', width: 200 },
-          { sortable: false, field: 'high', headerName: 'Max Date', width: 200 },
-          { sortable: false, field: 'low', headerName: 'Max Date', width: 200 },
-          { sortable: false, field: 'open', headerName: 'Max Date', width: 200 },
-          { sortable: false, field: 'volume', headerName: 'Max Date', width: 200 },
+          { sortable: false, field: 'date', headerName: 'Date', width: 200 },
+          { sortable: false, field: 'adj', headerName: 'Adj', width: 200 },
+          { sortable: false, field: 'close', headerName: 'Close', width: 200 },
+          { sortable: false, field: 'high', headerName: 'High', width: 200 },
+          { sortable: false, field: 'low', headerName: 'Low', width: 200 },
+          { sortable: false, field: 'open', headerName: 'Open', width: 200 },
+          { sortable: false, field: 'volume', headerName: 'Volume', width: 200 },
           {
             sortable: false, field: 'actions', headerName: '', width: 10, renderCell: (params) => {
               return (
@@ -176,9 +179,10 @@ export const StockPricePage = () => {
           page: page,
           pageSize: pageSize,
         }}
+        paginationMode="server"
         rowCount={stockPriceCount}
         onPaginationModelChange={(params: any) => {
-          StockListService.useStore.setState({ page: params.page, pageSize: params.pageSize })
+          StockPriceListService.useStore.setState({ page: params.page, pageSize: params.pageSize })
         }}
         pageSizeOptions={[5, 10, 20, 50, 100]}
       />

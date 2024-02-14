@@ -5,8 +5,6 @@ interface Store {
   search: string;
   page: number;
   pageSize: number;
-  minDate: string;
-  maxDate: string;
   indexSearch: boolean;
 }
 
@@ -14,8 +12,6 @@ const useStore = create<Store>((set) => ({
   search: '',
   page: 0,
   pageSize: 10,
-  minDate: '',
-  maxDate: '',
   indexSearch: false,
 }))
 

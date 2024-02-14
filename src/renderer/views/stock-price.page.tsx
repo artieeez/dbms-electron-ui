@@ -2,7 +2,6 @@ import { Box, Button, CardHeader, Collapse, Container, FormControlLabel, IconBut
 import { DataGrid } from "@mui/x-data-grid"
 import { useState } from "react";
 import { DeleteRounded, SearchRounded } from "@mui/icons-material";
-import { StockListService } from "../service/stock-list.service";
 import { StockPriceListService } from "../service/stock-price-list.service";
 import { DatabaseStateService } from "../service/db-state.service";
 
@@ -178,7 +177,7 @@ export const StockPricePage = () => {
         }}
         rowCount={stockPriceCount}
         onPaginationModelChange={(params: any) => {
-          StockListService.useStore.setState({ page: params.page, pageSize: params.pageSize })
+          StockPriceListService.useStore.setState({ page: params.page, pageSize: params.pageSize })
         }}
         pageSizeOptions={[5, 10, 20, 50, 100]}
       />

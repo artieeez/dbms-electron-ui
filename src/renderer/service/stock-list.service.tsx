@@ -5,12 +5,14 @@ interface Store {
   search: string;
   page: number;
   pageSize: number;
+  indexSearch: boolean;
 }
 
 const useStore = create<Store>((set) => ({
   search: '',
   page: 0,
   pageSize: 10,
+  indexSearch: false,
 }))
 
 const useStockQuery = () => {
@@ -18,12 +20,14 @@ const useStockQuery = () => {
   const search = useStore(e => e.search)
   const page = useStore(e => e.page)
   const pageSize = useStore(e => e.pageSize)
+  const indexSearch = useStore(e => e.indexSearch)
 
   return useQuery({
-    queryKey: ['stock', search, pageSize, page],
+    queryKey: ['stock', indexSearch, search, pageSize, page],
     queryFn: async () => {
-      const res = window.dbms?.linearSearch?.getStockList(search, page, pageSize, "name_asc")
-      return res
+      return indexSearch
+        ? window.dbms?.trie?.getStockList(search, page, pageSize)
+        : window.dbms?.linear?.getStockList(search, page, pageSize)
     },
   })
 }

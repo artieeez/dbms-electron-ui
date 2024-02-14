@@ -1,6 +1,6 @@
 import { Box, Button, CardHeader, Collapse, Container, FormControlLabel, IconButton, Stack, Switch, TextField, Typography } from "@mui/material"
 import { DataGrid } from "@mui/x-data-grid"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DeleteRounded, SearchRounded } from "@mui/icons-material";
 import { StockPriceListService } from "../service/stock-price-list.service";
 import { DatabaseStateService } from "../service/db-state.service";
@@ -15,6 +15,10 @@ export const StockPricePage = () => {
   const query = StockPriceListService.useStockPriceQuery()
   const indexSearch = StockPriceListService.useStore(e => e.indexSearch)
   const stockPriceCount = DatabaseStateService.useStore(e => e.stockPriceCount)
+
+  useEffect(() => {
+    console.log("query", query.data)
+  }, [query.data])
 
   // stock add form
   const [openAdd, setOpenAdd] = useState(false)
@@ -175,6 +179,7 @@ export const StockPricePage = () => {
           page: page,
           pageSize: pageSize,
         }}
+        paginationMode="server"
         rowCount={stockPriceCount}
         onPaginationModelChange={(params: any) => {
           StockPriceListService.useStore.setState({ page: params.page, pageSize: params.pageSize })

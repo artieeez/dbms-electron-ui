@@ -142,6 +142,7 @@ export const StockPage = () => {
           pageSize: pageSize,
         }}
         rowCount={stockCount}
+        paginationMode="server"
         onPaginationModelChange={(params: any) => {
           StockListService.useStore.setState({ page: params.page, pageSize: params.pageSize })
         }}

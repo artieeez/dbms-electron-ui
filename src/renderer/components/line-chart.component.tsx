@@ -4,12 +4,14 @@ import ReactApexChart from 'react-apexcharts';
 import { StockPrice } from '../infra/dbms.model';
 
 const LineChart =  ({
-  data
+  data,
+  id
 }:{
   data: {
     series: ApexAxisChartSeries;
     categories: string[];
-  }
+  },
+  id:string
 }) => {
 
   const options: ApexOptions = {
@@ -27,7 +29,7 @@ const LineChart =  ({
       curve: 'straight'
     },
     title: {
-      text: 'Product Trends by Month',
+      text: `Volume Trend of ${id} Stock`,
       align: 'left'
     },
     grid: {

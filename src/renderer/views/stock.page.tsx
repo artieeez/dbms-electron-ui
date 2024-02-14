@@ -1,4 +1,4 @@
-import { Box, Button, CardHeader, Collapse, Container, FormControlLabel, IconButton, Stack, Switch, TextField, Typography } from "@mui/material"
+import { Box, Button, ButtonGroup, CardHeader, Collapse, Container, FormControlLabel, IconButton, Stack, Switch, TextField, Typography } from "@mui/material"
 import { DataGrid } from "@mui/x-data-grid"
 import { useState } from "react";
 import { Stock } from "../infra/dbms.model";
@@ -30,15 +30,14 @@ export const StockPage = () => {
   const [companyId, setCompanyId] = useState('')
   const [minDate, setMinDate] = useState('')
   const [maxDate, setMaxDate] = useState('')
-  const addStock = () => {
+  const payload = {
+    stockId,
+    companyId,
+    minDate,
+    maxDate
+  }
 
-    const payload: Stock = {
-      stockId,
-      companyId,
-      minDate,
-      maxDate
-    }
-
+  const addStock = (create: boolean) => {
     createMutation.mutateAsync(payload)
   }
 
@@ -56,7 +55,6 @@ export const StockPage = () => {
           <Button
             variant="contained"
             onClick={() => setOpenAdd(!openAdd)}
-            sx={{ mt: 2 }}
           >
             Add Stock
           </Button>
@@ -86,13 +84,25 @@ export const StockPage = () => {
             value={maxDate}
             onChange={(e) => setMaxDate(e.target.value)}
           />
-          <Button
+
+          <ButtonGroup
             variant="contained"
-            onClick={addStock}
             sx={{ flex: 1 }}
           >
-            Confirm
-          </Button>
+            <Button
+              color="warning"
+              fullWidth
+              onClick={() => updateMutation.mutateAsync(payload)}
+            >
+              Update
+            </Button>
+            <Button
+              fullWidth
+              onClick={() => createMutation.mutateAsync(payload)}
+            >
+              Create
+            </Button>
+          </ButtonGroup>
         </Box>
       </Collapse>
       <TextField
@@ -126,21 +136,23 @@ export const StockPage = () => {
           { sortable: false, field: 'companyId', headerName: 'Company ID', width: 200 },
           { sortable: false, field: 'minDate', headerName: 'Min Date', width: 200 },
           { sortable: false, field: 'maxDate', headerName: 'Max Date', width: 200 },
-          { sortable: false, field: 'actions', headerName: '', width: 10, renderCell: (params) => {
-            return (
-              <Stack direction="row" justifyContent="end" spacing={2}>
-                <IconButton
-                  onClick={() => {
-                    deleteMutation.mutateAsync(params.row.stockId as string)
-                  }}
-                  color="error"
-                >
-                  <DeleteRounded />
-                </IconButton>
-              </Stack>
-            )
+          {
+            sortable: false, field: 'actions', headerName: '', width: 10, renderCell: (params) => {
+              return (
+                <Stack direction="row" justifyContent="end" spacing={2}>
+                  <IconButton
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      deleteMutation.mutateAsync(params.row.stockId as string)
+                    }}
+                    color="error"
+                  >
+                    <DeleteRounded />
+                  </IconButton>
+                </Stack>
+              )
+            }
           }
-        }
         ]}
         sx={{ height: 500, width: '100%' }}
         rowSelection={false}

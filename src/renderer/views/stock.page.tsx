@@ -42,7 +42,6 @@ export const StockPage = () => {
   }
 
   const handleRowClick = (params: any) => {
-    console.log(params.row.stockId)
     navigate(`/stock/${params.row.stockId}`)
   }
 

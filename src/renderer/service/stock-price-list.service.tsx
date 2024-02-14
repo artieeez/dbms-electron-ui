@@ -24,8 +24,6 @@ const useStockPriceQuery = (stockId?:string) => {
 
   const searchStockId = stockId || search
 
-  console.log(searchStockId, page, pageSize, indexSearch)
-
   return useQuery({
     queryKey: ['stock-price', indexSearch, searchStockId, pageSize, page],
     queryFn: async () => {

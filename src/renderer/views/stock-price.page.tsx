@@ -145,13 +145,13 @@ export const StockPricePage = () => {
         columns={[
           { sortable: false, field: 'stockId', headerName: 'ID', width: 200 },
           { sortable: false, field: 'stockPriceId', headerName: 'Company ID', width: 200 },
-          { sortable: false, field: 'date', headerName: 'Min Date', width: 200 },
-          { sortable: false, field: 'adj', headerName: 'Max Date', width: 200 },
-          { sortable: false, field: 'close', headerName: 'Max Date', width: 200 },
-          { sortable: false, field: 'high', headerName: 'Max Date', width: 200 },
-          { sortable: false, field: 'low', headerName: 'Max Date', width: 200 },
-          { sortable: false, field: 'open', headerName: 'Max Date', width: 200 },
-          { sortable: false, field: 'volume', headerName: 'Max Date', width: 200 },
+          { sortable: false, field: 'date', headerName: 'Date', width: 200 },
+          { sortable: false, field: 'adj', headerName: 'Adj', width: 200 },
+          { sortable: false, field: 'close', headerName: 'Close', width: 200 },
+          { sortable: false, field: 'high', headerName: 'High', width: 200 },
+          { sortable: false, field: 'low', headerName: 'Low', width: 200 },
+          { sortable: false, field: 'open', headerName: 'Open', width: 200 },
+          { sortable: false, field: 'volume', headerName: 'Volume', width: 200 },
           {
             sortable: false, field: 'actions', headerName: '', width: 10, renderCell: (params) => {
               return (

@@ -20,6 +20,10 @@ export const StockPage = () => {
   const stockCount = DatabaseStateService.useStore(e => e.stockCount)
   const navigate = useNavigate();
 
+  const createMutation = StockListService.useStockMutation(true)
+  const updateMutation = StockListService.useStockMutation(false)
+  const deleteMutation = StockListService.useStockDeleteMutation()
+
   // stock add form
   const [openAdd, setOpenAdd] = useState(false)
   const [stockId, setStockId] = useState('')
@@ -35,7 +39,7 @@ export const StockPage = () => {
       maxDate
     }
 
-    dbms?.trie?.addStock(payload)
+    createMutation.mutateAsync(payload)
   }
 
   const handleRowClick = (params: any) => {
@@ -127,7 +131,7 @@ export const StockPage = () => {
               <Stack direction="row" justifyContent="end" spacing={2}>
                 <IconButton
                   onClick={() => {
-                    dbms?.indexController?.deleteStock(params.row.stockId as string)
+                    deleteMutation.mutateAsync(params.row.stockId as string)
                   }}
                   color="error"
                 >

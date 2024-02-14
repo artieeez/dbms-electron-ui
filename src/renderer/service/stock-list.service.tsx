@@ -1,5 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { create } from "zustand";
+import { Stock } from "../infra/dbms.model";
 
 interface Store {
   search: string;
@@ -32,7 +33,35 @@ const useStockQuery = () => {
   })
 }
 
+const useStockMutation = (create?: boolean) => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (payload: Stock) => {
+      return create
+        ? window.dbms?.trie?.addStock(payload)
+        : window.dbms?.trie?.updateStock(payload)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['stock'] })
+    }
+  })
+}
+
+const useStockDeleteMutation = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (stockId: string) => {
+      return window.dbms?.trie?.deleteStock(stockId)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['stock'] })
+    }
+  })
+}
+
 export const StockListService = {
   useStore,
-  useStockQuery
+  useStockQuery,
+  useStockMutation,
+  useStockDeleteMutation,
 }

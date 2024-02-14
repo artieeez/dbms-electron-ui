@@ -22,7 +22,7 @@ const useStore = create<Store>((set) => ({
 
 const iterator = async () => {
   return new Promise<void>(resolve => {
-    const { stockCount, stockPriceCount, isFinished } = window.dbms?.stateController?.loadDb(useStore.getState().pageSize)
+    const { stockCount, stockPriceCount, isFinished } = window.dbms?.state?.loadDb(useStore.getState().pageSize)
     useStore.setState({ stockCount, stockPriceCount, isFinished })
     setTimeout(() => {
       resolve()
@@ -35,7 +35,7 @@ const useDatabaseState = () => {
     queryKey: ["dbState"],
     queryFn: () => {
       return new Promise(resolve => {
-        const res = window.dbms?.stateController?.getDatabaseState();
+        const res = window.dbms?.state?.getDatabaseState();
         useStore.setState({
           stockCount: res.stockCount,
           stockPriceCount: res.stockPriceCount,
@@ -80,7 +80,7 @@ const useResetDbMutation = () => {
   return useMutation({
     mutationFn: () => {
       return new Promise<void>(resolve => {
-        window.dbms?.stateController?.resetDatabase()
+        window.dbms?.state?.resetDatabase()
         resolve()
       })
     }

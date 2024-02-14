@@ -28,10 +28,12 @@ const useStockPriceQuery = (stockId?:string) => {
 
   const searchStockId = stockId || search
 
+  console.log(searchStockId, page, pageSize, indexSearch)
+
   return useQuery({
     queryKey: ['stock-price', indexSearch, searchStockId, pageSize, page],
     queryFn: async () => {
-      return indexSearch
+      return !indexSearch
         ? window.dbms?.trie?.getStockPriceList(searchStockId, page, pageSize)
         : window.dbms?.linear?.getStockPriceList(searchStockId, page, pageSize)
     },

@@ -38,6 +38,11 @@ export const StockPage = () => {
     dbms?.trie?.addStock(payload)
   }
 
+  const handleRowClick = (params: any) => {
+    console.log(params.row.stockId)
+    navigate(`/stock/${params.row.stockId}`)
+  }
+
   return (
     <Container sx={{ py: 4 }}>
       <CardHeader
@@ -122,9 +127,7 @@ export const StockPage = () => {
               <Stack direction="row" justifyContent="end" spacing={2}>
                 <IconButton
                   onClick={() => {
-                    console.log(params.row.stockId)
-                   //dbms?.indexController?.deleteStock(params.row.stockId as string)
-                   navigate(`/stock/${params.row.stockId}`)
+                    dbms?.indexController?.deleteStock(params.row.stockId as string)
                   }}
                   color="error"
                 >
@@ -146,6 +149,7 @@ export const StockPage = () => {
           StockListService.useStore.setState({ page: params.page, pageSize: params.pageSize })
         }}
         pageSizeOptions={[5, 10, 20, 50, 100]}
+        onRowClick={handleRowClick}
       />
     </Container>
   )

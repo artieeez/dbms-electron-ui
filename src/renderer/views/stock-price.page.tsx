@@ -4,10 +4,9 @@ import { useState } from "react";
 import { DeleteRounded, SearchRounded } from "@mui/icons-material";
 import { StockListService } from "../service/stock-list.service";
 import { StockPriceListService } from "../service/stock-price-list.service";
+import { DatabaseStateService } from "../service/db-state.service";
 
 const dbms = window.dbms
-
-console.log("dbms", dbms)
 
 export const StockPricePage = () => {
 
@@ -15,6 +14,7 @@ export const StockPricePage = () => {
   const page = StockPriceListService.useStore(e => e.page)
   const pageSize = StockPriceListService.useStore(e => e.pageSize)
   const query = StockPriceListService.useStockPriceQuery()
+  const stockPriceCount = DatabaseStateService.useStore(e => e.stockPriceCount)
 
 
   // stock add form
@@ -28,7 +28,7 @@ export const StockPricePage = () => {
   const [open, setOpen] = useState(0)
   const [volume, setVolume] = useState(0)
   const addStock = () => {
-    dbms?.indexController?.addStockPrice({ stockId, stockPriceId: stockId + date, date, adj, close, high, low, open, volume })
+    dbms?.trie?.addStockPrice({ stockId, stockPriceId: stockId + date, date, adj, close, high, low, open, volume })
   }
 
   return (
@@ -149,7 +149,7 @@ export const StockPricePage = () => {
                 <Stack direction="row" justifyContent="end" spacing={2}>
                   <IconButton
                     onClick={() => {
-                      dbms?.indexController?.deleteStock(params.row.stockId as string)
+                      dbms?.trie?.deleteStock(params.row.stockId as string)
                     }}
                     color="error"
                   >
@@ -166,6 +166,7 @@ export const StockPricePage = () => {
           page: page,
           pageSize: pageSize,
         }}
+        rowCount={stockPriceCount}
         onPaginationModelChange={(params: any) => {
           StockListService.useStore.setState({ page: params.page, pageSize: params.pageSize })
         }}

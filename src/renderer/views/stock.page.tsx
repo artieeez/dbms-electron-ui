@@ -24,7 +24,15 @@ export const StockPage = () => {
   const [minDate, setMinDate] = useState('')
   const [maxDate, setMaxDate] = useState('')
   const addStock = () => {
-    dbms?.indexController?.addStock(stockId, companyId, minDate, maxDate)
+
+    const payload: Stock = {
+      stockId,
+      companyId,
+      minDate,
+      maxDate
+    }
+
+    dbms?.trie?.addStock(payload)
   }
   console.log(dbms)
   return (
@@ -101,7 +109,7 @@ export const StockPage = () => {
               <Stack direction="row" justifyContent="end" spacing={2}>
                 <IconButton
                   onClick={() => {
-                   dbms?.indexController?.deleteStock(params.row.stockId as string)
+                   dbms?.trie?.deleteStock(params.row.stockId as string)
                   }}
                   color="error"
                 >

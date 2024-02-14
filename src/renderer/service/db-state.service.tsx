@@ -15,15 +15,23 @@ const useStore = create<Store>((set) => ({
   cancel: false,
   pageSize: 10,
   stockCount: 0,
-  stockPriceCount: -1,
+  stockPriceCount: 0,
   loading: false,
   isFinished: false,
 }))
 
 const iterator = async () => {
   return new Promise<void>(resolve => {
+    const pageSize = useStore.getState().pageSize
+    console.log(`Loading ${pageSize} items`);
     const { stockCount, stockPriceCount, isFinished } = window.dbms?.state?.loadDb(useStore.getState().pageSize)
-    useStore.setState({ stockCount, stockPriceCount, isFinished })
+    useStore.setState({
+      stockCount,
+      stockPriceCount,
+      isFinished
+    })
+    console.log("StockCount", stockCount)
+    console.log("StockPriceCount", stockPriceCount)
     setTimeout(() => {
       resolve()
     }, 200)
@@ -41,6 +49,7 @@ const useDatabaseState = () => {
           stockPriceCount: res.stockPriceCount,
           isFinished: res.isFinished
         })
+        resolve(res)
       })
     },
   })
@@ -50,7 +59,7 @@ const useLoadDbMutation = () => {
   return useMutation({
     mutationFn: () => {
       return new Promise(async resolve => {
-        while (!useStore.getState().cancel && useStore.getState().stockPriceCount !== 0 && !useStore.getState().isFinished) {
+        while (!useStore.getState().cancel && !useStore.getState().isFinished) {
           await iterator()
         }
         resolve(useStore.getState().stockPriceCount)
@@ -79,9 +88,10 @@ const useLoadDbMutation = () => {
 const useResetDbMutation = () => {
   return useMutation({
     mutationFn: () => {
-      return new Promise<void>(resolve => {
+      return new Promise(resolve => {
         window.dbms?.state?.resetDatabase()
-        resolve()
+        useStore.setState({ stockCount: 0, stockPriceCount: 0, isFinished: false })
+        resolve(true)
       })
     }
   })

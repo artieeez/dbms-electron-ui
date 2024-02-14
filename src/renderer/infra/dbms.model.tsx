@@ -4,7 +4,6 @@ export interface Stock {
   minDate: string;
   maxDate: string;
 }
-
 export interface StockPrice {
   stockPriceId: string;
   stockId: string;
@@ -16,52 +15,38 @@ export interface StockPrice {
   open: number;
   volume: number;
 }
-
-export interface stockPricePayload {
-  stockId: string;
-  stockPriceId: string;
-   date: string;
-   adj: number;
-   close: number;
-   high: number;
-   low: number;
-   open: number;
-  volume: number;
-}
 export interface ILinearSearch {
-  addStock: (stockId: string, companyId: string, minDate: string, maxDate: string) => void;
-  addStockPrice: (stockPrice: stockPricePayload)=> void;
-  updateStock: (stockId: string, companyId: string, minDate: string, maxDate: string) => void;
   getStock: (stockId: string) => Stock;
-  deleteStock: (stockId: string) => void;
-  getStockList: (search: string, pageNumber: number, pageSize: number, orderBy: string) => Stock[];
-  getStockPriceList: (stockId:string, minDate:string, maxDate:string, orderBy: string) => StockPrice[];
+  getStockList: (stockId: string, pageNumber: number, pageSize: number) => Stock[];
+  getStockPriceList: (stockId: string, pageNumber: number, pageSize: number) => StockPrice[];
 }
 
 export interface IIndexController {
-  addStock: (stockId: string, companyId: string, minDate: string, maxDate: string) => void;
-  addStockPrice: (stockPrice: stockPricePayload)=> void;
-  updateStock: (stockId: string, companyId: string, minDate: string, maxDate: string) => void;
   getStock: (stockId: string) => Stock;
+  getStockList: (stockId: string, pageNumber: number, pageSize: number) => Stock[];
+  getStockPriceList: (stockId: string, pageNumber: number, pageSize: number) => StockPrice[];
+  addStock: (stock: Stock) => void;
   deleteStock: (stockId: string) => void;
-  getStockList: (search: string, pageNumber: number, pageSize: number, orderBy: string) => Stock[];
-  getStockPriceList: (stockId:string, page: number, pageSize: number) => StockPrice[];
+  updateStock: (stock: Stock) => void;
+  addStockPrice: (stockPrice: StockPrice) => void;
+  deleteStockPrice: (stockPriceId: string) => void;
 }
 
 export interface DatabaseState {
+  loaderPosition: number;
   stockCount: number;
   stockPriceCount: number;
   isFinished: boolean;
 }
 
 export interface IDatabaseState {
-  loadDb: (pageSize: number) => DatabaseState;
-  resetDatabase: () => void;
   getDatabaseState: () => DatabaseState;
+  resetDatabase: () => void;
+  loadDb: (pageSize: number) => DatabaseState;
 }
 
 export interface DBMS {
-  linearSearch: ILinearSearch;
-  indexController: IIndexController;
-  stateController: IDatabaseState,
+  linear: ILinearSearch;
+  trie: IIndexController;
+  state: IDatabaseState,
 }

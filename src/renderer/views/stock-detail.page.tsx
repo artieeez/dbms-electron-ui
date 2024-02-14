@@ -17,7 +17,7 @@ function parseDataToCandleGraph(obj:StockPrice) {
   const { date, open, high, low, close, volume } = obj;
   const timestamp = new Date(date).getTime();
   return {
-    x: new Date(timestamp),
+    x: new Date(date).toLocaleDateString(),
     y: [open, high, low, close].map(n => parseFloat(n.toFixed(2)))
   };
 }
@@ -33,16 +33,19 @@ export const StockDetailPage = () => {
   const pageSize = StockPriceListService.useStore(e => e.pageSize)
   const query = StockPriceListService.useStockPriceQuery(id)
 
-  const candleData: ApexAxisChartSeries = [{
-    data: query?.data?.length ? query?.data.map(parseDataToCandleGraph) : []
-  }]
+  const candleData = {
+    series: [{
+      data: query?.data?.length ? query?.data.map(parseDataToCandleGraph) : []
+    }],
+    categories: query?.data?.length ? query?.data.map(obj => obj.date) : []
+}
 
   const lineData = {
     series: [{
       name: "Volume",
       data: query?.data?.length ? query?.data.map(obj => obj.volume) : []
     }],
-    categories: query?.data?.length ? query?.data.map(obj => obj.date) : []
+    categories: query?.data?.length ? query?.data.map(obj => new Date(obj.date).toLocaleDateString()) : []
 }
 
   console.log(id, candleData, lineData)
@@ -63,8 +66,8 @@ export const StockDetailPage = () => {
           </Button>
         }
       />
-      <CandleChart data={candleData}/>
-      <LineChart data={lineData}/>
+      <CandleChart data={candleData} />
+      <LineChart data={lineData} id={id as string}/>
     </Container>
   )
 }

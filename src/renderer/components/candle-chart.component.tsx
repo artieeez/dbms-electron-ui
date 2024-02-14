@@ -6,7 +6,10 @@ import { StockPrice } from '../infra/dbms.model';
 const CandleChart =  ({
   data
 }:{
-  data: ApexAxisChartSeries
+  data: {
+    series: ApexAxisChartSeries;
+    categories: string[];
+  }
 }) => {
 
 const options: ApexOptions={
@@ -15,11 +18,11 @@ const options: ApexOptions={
         height: 350
     },
     title: {
-        text: 'CandleStick Chart',
+        text: 'Candlestick Chart of Stock Prices',
         align: 'left'
     },
     xaxis: {
-        type: 'datetime'
+      categories: data.categories,
     },
     yaxis: {
         tooltip: {
@@ -31,7 +34,7 @@ const options: ApexOptions={
   return (
     <div>
       <div id="chart">
-        <ReactApexChart options={options} series={data} type="candlestick" height={350} />
+        <ReactApexChart options={options} series={data.series} type="candlestick" height={350} />
       </div>
       <div id="html-dist"></div>
     </div>

@@ -6,6 +6,7 @@ import { DeleteRounded, RemoveRounded } from "@mui/icons-material";
 import { StockListService } from "../service/stock-list.service";
 import { DatabaseStateService } from "../service/db-state.service";
 import { SearchRounded } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 const dbms = window.dbms
 
@@ -17,6 +18,7 @@ export const StockPage = () => {
   const query = StockListService.useStockQuery()
   const indexSearch = StockListService.useStore(e => e.indexSearch)
   const stockCount = DatabaseStateService.useStore(e => e.stockCount)
+  const navigate = useNavigate();
 
   // stock add form
   const [openAdd, setOpenAdd] = useState(false)
@@ -115,22 +117,23 @@ export const StockPage = () => {
           { sortable: false, field: 'companyId', headerName: 'Company ID', width: 200 },
           { sortable: false, field: 'minDate', headerName: 'Min Date', width: 200 },
           { sortable: false, field: 'maxDate', headerName: 'Max Date', width: 200 },
-          {
-            sortable: false, field: 'actions', headerName: '', width: 10, renderCell: (params) => {
-              return (
-                <Stack direction="row" justifyContent="end" spacing={2}>
-                  <IconButton
-                    onClick={() => {
-                      dbms?.trie?.deleteStock(params.row.stockId as string)
-                    }}
-                    color="error"
-                  >
-                    <DeleteRounded />
-                  </IconButton>
-                </Stack>
-              )
-            }
+          { sortable: false, field: 'actions', headerName: '', width: 10, renderCell: (params) => {
+            return (
+              <Stack direction="row" justifyContent="end" spacing={2}>
+                <IconButton
+                  onClick={() => {
+                    console.log(params.row.stockId)
+                   //dbms?.indexController?.deleteStock(params.row.stockId as string)
+                   navigate(`/stock/${params.row.stockId}`)
+                  }}
+                  color="error"
+                >
+                  <DeleteRounded />
+                </IconButton>
+              </Stack>
+            )
           }
+        }
         ]}
         sx={{ height: 500, width: '100%' }}
         rowSelection={false}

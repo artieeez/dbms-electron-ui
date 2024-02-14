@@ -19,19 +19,21 @@ const useStore = create<Store>((set) => ({
   indexSearch: false,
 }))
 
-const useStockPriceQuery = () => {
+const useStockPriceQuery = (stockId?:string) => {
 
   const search = useStore(e => e.search)
   const page = useStore(e => e.page)
   const pageSize = useStore(e => e.pageSize)
   const indexSearch = useStore(e => e.indexSearch)
 
+  const searchStockId = stockId || search
+
   return useQuery({
-    queryKey: ['stock-price', indexSearch, search, pageSize, page],
+    queryKey: ['stock-price', indexSearch, searchStockId, pageSize, page],
     queryFn: async () => {
       return indexSearch
-        ? window.dbms?.trie?.getStockPriceList(search, page, pageSize)
-        : window.dbms?.linear?.getStockPriceList(search, page, pageSize)
+        ? window.dbms?.trie?.getStockPriceList(searchStockId, page, pageSize)
+        : window.dbms?.linear?.getStockPriceList(searchStockId, page, pageSize)
     },
   })
 }

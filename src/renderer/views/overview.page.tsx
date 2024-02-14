@@ -19,6 +19,7 @@ export const Overview = () => {
       <CardHeader
         title="Overview"
         subheader="Welcome to the Stock Dashboard"
+        sx={{ pl: 0 }}
       />
       <Card variant="outlined">
         <CardHeader

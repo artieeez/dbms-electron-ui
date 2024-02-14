@@ -1,4 +1,4 @@
-import { Box, Button, CardHeader, Collapse, Container, IconButton, Stack, TextField, Typography } from "@mui/material"
+import { Box, Button, CardHeader, Collapse, Container, FormControlLabel, IconButton, Stack, Switch, TextField, Typography } from "@mui/material"
 import { DataGrid } from "@mui/x-data-grid"
 import { useState } from "react";
 import { DeleteRounded, SearchRounded } from "@mui/icons-material";
@@ -14,8 +14,8 @@ export const StockPricePage = () => {
   const page = StockPriceListService.useStore(e => e.page)
   const pageSize = StockPriceListService.useStore(e => e.pageSize)
   const query = StockPriceListService.useStockPriceQuery()
+  const indexSearch = StockPriceListService.useStore(e => e.indexSearch)
   const stockPriceCount = DatabaseStateService.useStore(e => e.stockPriceCount)
-
 
   // stock add form
   const [openAdd, setOpenAdd] = useState(false)
@@ -129,6 +129,16 @@ export const StockPricePage = () => {
             </Box>
           ),
         }}
+      />
+      <FormControlLabel
+        sx={{ mb: 1 }}
+        control={
+          <Switch
+            checked={indexSearch}
+            onChange={(e) => StockPriceListService.useStore.setState({ indexSearch: e.target.checked })}
+          />
+        }
+        label="Busca indexada"
       />
       <DataGrid
         rows={query?.data || []}

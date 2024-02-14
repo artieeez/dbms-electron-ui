@@ -1,6 +1,6 @@
-import { Box, Button, CardHeader, Collapse, Container, IconButton, Stack, TextField, Typography } from "@mui/material"
+import { Box, Button, CardHeader, Collapse, Container, FormControlLabel, IconButton, Stack, Switch, TextField, Typography } from "@mui/material"
 import { DataGrid } from "@mui/x-data-grid"
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Stock } from "../infra/dbms.model";
 import { DeleteRounded, RemoveRounded } from "@mui/icons-material";
 import { StockListService } from "../service/stock-list.service";
@@ -15,6 +15,7 @@ export const StockPage = () => {
   const page = StockListService.useStore(e => e.page)
   const pageSize = StockListService.useStore(e => e.pageSize)
   const query = StockListService.useStockQuery()
+  const indexSearch = StockListService.useStore(e => e.indexSearch)
   const stockCount = DatabaseStateService.useStore(e => e.stockCount)
 
   // stock add form
@@ -34,7 +35,7 @@ export const StockPage = () => {
 
     dbms?.trie?.addStock(payload)
   }
-  console.log(dbms)
+
   return (
     <Container sx={{ py: 4 }}>
       <CardHeader
@@ -96,6 +97,16 @@ export const StockPage = () => {
           ),
         }}
       />
+      <FormControlLabel
+        sx={{ mb: 1 }}
+        control={
+          <Switch
+            checked={indexSearch}
+            onChange={(e) => StockListService.useStore.setState({ indexSearch: e.target.checked })}
+          />
+        }
+        label="Busca indexada"
+      />
       <DataGrid
         rows={query?.data || []}
         getRowId={(row) => row.stockId}
@@ -104,21 +115,22 @@ export const StockPage = () => {
           { sortable: false, field: 'companyId', headerName: 'Company ID', width: 200 },
           { sortable: false, field: 'minDate', headerName: 'Min Date', width: 200 },
           { sortable: false, field: 'maxDate', headerName: 'Max Date', width: 200 },
-          { sortable: false, field: 'actions', headerName: '', width: 10, renderCell: (params) => {
-            return (
-              <Stack direction="row" justifyContent="end" spacing={2}>
-                <IconButton
-                  onClick={() => {
-                   dbms?.trie?.deleteStock(params.row.stockId as string)
-                  }}
-                  color="error"
-                >
-                  <DeleteRounded />
-                </IconButton>
-              </Stack>
-            )
+          {
+            sortable: false, field: 'actions', headerName: '', width: 10, renderCell: (params) => {
+              return (
+                <Stack direction="row" justifyContent="end" spacing={2}>
+                  <IconButton
+                    onClick={() => {
+                      dbms?.trie?.deleteStock(params.row.stockId as string)
+                    }}
+                    color="error"
+                  >
+                    <DeleteRounded />
+                  </IconButton>
+                </Stack>
+              )
+            }
           }
-        }
         ]}
         sx={{ height: 500, width: '100%' }}
         rowSelection={false}

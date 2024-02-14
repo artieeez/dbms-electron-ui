@@ -45,7 +45,7 @@ export const StockDetailPage = () => {
       name: "Volume",
       data: query?.data?.length ? query?.data.map(obj => obj.volume) : []
     }],
-    categories: query?.data?.length ? query?.data.map(obj => obj.date) : []
+    categories: query?.data?.length ? query?.data.map(obj => new Date(obj.date).toLocaleDateString()) : []
 }
 
   console.log(id, candleData, lineData)

@@ -63,7 +63,7 @@ export const Overview = () => {
           <LinearProgress variant="determinate" value={currPos / 894777} />
         </CardContent>
       </Card>
-      <Card variant="outlined">
+      <Card variant="outlined" sx={{ mt: 2 }}>
         <CardHeader
           title="Database Actions"
         />

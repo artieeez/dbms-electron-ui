@@ -27,7 +27,7 @@ const useStockPriceQuery = (stockId?:string) => {
   return useQuery({
     queryKey: ['stock-price', indexSearch, searchStockId, pageSize, page],
     queryFn: async () => {
-      return !indexSearch
+      return indexSearch
         ? window.dbms?.trie?.getStockPriceList(searchStockId, page, pageSize)
         : window.dbms?.linear?.getStockPriceList(searchStockId, page, pageSize)
     },

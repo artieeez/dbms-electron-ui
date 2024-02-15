@@ -23,7 +23,6 @@ const useStore = create<Store>((set) => ({
 const iterator = async () => {
   return new Promise<void>(resolve => {
     const pageSize = useStore.getState().pageSize
-    console.log(`Loading ${pageSize} items`);
     const { stockCount, stockPriceCount, isFinished } = window.dbms?.state?.loadDb(useStore.getState().pageSize)
     useStore.setState({
       stockCount,

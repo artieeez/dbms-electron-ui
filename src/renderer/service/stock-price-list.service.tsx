@@ -15,21 +15,28 @@ const useStore = create<Store>((set) => ({
   indexSearch: false,
 }))
 
-const useStockPriceQuery = (stockId?:string) => {
+interface QueryParams {
+  stockId?: string;
+  page?: number;
+  pageSize?: number;
+}
+const useStockPriceQuery = (params?: QueryParams) => {
 
   const search = useStore(e => e.search)
   const page = useStore(e => e.page)
   const pageSize = useStore(e => e.pageSize)
   const indexSearch = useStore(e => e.indexSearch)
 
-  const searchStockId = stockId || search
+  const searchStockId = params?.stockId || search
+  const searchPage = params?.page || page
+  const searchPageSize = params?.pageSize || pageSize
 
   return useQuery({
-    queryKey: ['stock-price', indexSearch, searchStockId, pageSize, page],
+    queryKey: ['stock-price', indexSearch, searchStockId, searchPageSize, searchPage],
     queryFn: async () => {
       return indexSearch
-        ? window.dbms?.trie?.getStockPriceList(searchStockId, page, pageSize)
-        : window.dbms?.linear?.getStockPriceList(searchStockId, page, pageSize)
+        ? window.dbms?.trie?.getStockPriceList(searchStockId, searchPage, searchPageSize)
+        : window.dbms?.linear?.getStockPriceList(searchStockId, searchPage, searchPageSize)
     },
   })
 }

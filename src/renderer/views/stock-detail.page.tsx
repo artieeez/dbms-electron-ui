@@ -1,19 +1,16 @@
-import { Box, Button, CardHeader, Collapse, Container, IconButton, Stack, TextField, Typography } from "@mui/material"
-import { DataGrid } from "@mui/x-data-grid"
-import { useState } from "react";
-import { ArrowBackRounded, DeleteRounded, SearchRounded } from "@mui/icons-material";
-import { StockListService } from "../service/stock-list.service";
+import { Button, CardHeader, Container, FormControlLabel, Slider, Switch } from "@mui/material"
+import { ArrowBackRounded } from "@mui/icons-material";
 import { StockPriceListService } from "../service/stock-price-list.service";
 import CandleChart from "../components/candle-chart.component";
 import { useNavigate, useParams } from "react-router-dom";
 import { StockPrice } from "../infra/dbms.model";
 import LineChart from "../components/line-chart.component";
+import { useMemo, useState } from "react";
 
 const dbms = window.dbms
 
-console.log("dbms", dbms)
 
-function parseDataToCandleGraph(obj:StockPrice) {
+function parseDataToCandleGraph(obj: StockPrice) {
   const { date, open, high, low, close, volume } = obj;
   const timestamp = new Date(date).getTime();
   return {
@@ -25,20 +22,25 @@ function parseDataToCandleGraph(obj:StockPrice) {
 
 export const StockDetailPage = () => {
 
-  const {id} = useParams()
+  const { id } = useParams()
   const navigate = useNavigate();
 
-  const search = StockPriceListService.useStore(e => e.search)
-  const page = StockPriceListService.useStore(e => e.page)
-  const pageSize = StockPriceListService.useStore(e => e.pageSize)
-  const query = StockPriceListService.useStockPriceQuery(id)
+  const indexSearch = StockPriceListService.useStore(e => e.indexSearch)
+
+  const [range, setRange] = useState([0, 7]);
+
+  const query = StockPriceListService.useStockPriceQuery({
+    stockId: id as string,
+    page: range[0],
+    pageSize: range[1]
+  })
 
   const candleData = {
     series: [{
       data: query?.data?.length ? query?.data.map(parseDataToCandleGraph) : []
     }],
     categories: query?.data?.length ? query?.data.map(obj => obj.date) : []
-}
+  }
 
   const lineData = {
     series: [{
@@ -46,9 +48,7 @@ export const StockDetailPage = () => {
       data: query?.data?.length ? query?.data.map(obj => obj.volume) : []
     }],
     categories: query?.data?.length ? query?.data.map(obj => new Date(obj.date).toLocaleDateString()) : []
-}
-
-  console.log(id, candleData, lineData)
+  }
 
   return (
     <Container sx={{ py: 4 }}>
@@ -58,16 +58,34 @@ export const StockDetailPage = () => {
         // remove left padding
         sx={{ pl: 0 }}
         action={
-          <Button  
-          onClick={()=> navigate(-1)} 
-          startIcon={<ArrowBackRounded/>}
+          <Button
+            onClick={() => navigate(-1)}
+            startIcon={<ArrowBackRounded />}
           >
             Back
           </Button>
         }
       />
+      <FormControlLabel
+        sx={{ mb: 1 }}
+        control={
+          <Switch
+            checked={indexSearch}
+            onChange={(e) => StockPriceListService.useStore.setState({ indexSearch: e.target.checked })}
+          />
+        }
+        label="Busca indexada"
+      />
+      <Slider
+        value={range}
+        onChange={(_, value) => setRange(value as number[])}
+        min={0}
+        max={100}
+        valueLabelDisplay="auto"
+        marks
+      />
       <CandleChart data={candleData} />
-      <LineChart data={lineData} id={id as string}/>
+      <LineChart data={lineData} id={id as string} />
     </Container>
   )
 }

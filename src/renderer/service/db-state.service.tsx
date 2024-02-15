@@ -22,15 +22,12 @@ const useStore = create<Store>((set) => ({
 
 const iterator = async () => {
   return new Promise<void>(resolve => {
-    const pageSize = useStore.getState().pageSize
     const { stockCount, stockPriceCount, isFinished } = window.dbms?.state?.loadDb(useStore.getState().pageSize)
     useStore.setState({
       stockCount,
       stockPriceCount,
       isFinished
     })
-    console.log("StockCount", stockCount)
-    console.log("StockPriceCount", stockPriceCount)
     setTimeout(() => {
       resolve()
     }, 200)

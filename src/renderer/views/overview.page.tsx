@@ -60,7 +60,7 @@ export const Overview = () => {
           />
           <Typography>Database Status</Typography>
           <Typography align="center">{currPos} / 894777</Typography>
-          <LinearProgress variant="determinate" value={currPos / 894777} />
+          <LinearProgress variant="determinate" value={(currPos / 894777) * 100} />
         </CardContent>
       </Card>
       <Card variant="outlined" sx={{ mt: 2 }}>
